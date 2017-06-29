@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import org.apache.spark.sql.DataFrame
-import twinkle.dataframe.DataFrameUtils
+import twinkle.dataframe.AmbiguousColumnsUtils
 
 package object twinkle {
-  implicit def toDataFrameUtils(inputDf: DataFrame): DataFrameUtils = {
-    DataFrameUtils(inputDf)
+  implicit def toAmbiguousColumnsUtils(inputDf: DataFrame): AmbiguousColumnsUtils = {
+    AmbiguousColumnsUtils(inputDf)
   }
 }

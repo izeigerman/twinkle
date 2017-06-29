@@ -19,9 +19,9 @@ import org.apache.spark.sql.Row
 import org.scalatest.{FlatSpec, Matchers}
 import twinkle.SparkSessionMixin
 
-class DataFrameUtilsSpec extends FlatSpec with Matchers with SparkSessionMixin {
+class AmbiguousColumnsUtilsSpec extends FlatSpec with Matchers with SparkSessionMixin {
 
-  "DataFrame Utils" should "resolve ambiguous columns" in {
+  "AmbiguousColumnsUtils" should "resolve ambiguous columns using strategies" in {
     withSparkSession { spark =>
       val df = spark.createDataFrame(Seq(
         ("col1_1", "col2_1", "col3_1", "col4_1", "col5_1", "col6_1", "col7_1", "col8_1")
@@ -32,12 +32,32 @@ class DataFrameUtilsSpec extends FlatSpec with Matchers with SparkSessionMixin {
         "NAME2" -> TakeLastColumn
       )
 
-      val result = DataFrameUtils(df).resolveAmbiguity(strategies, default = TakeFirstColumn)
+      val result = AmbiguousColumnsUtils(df).resolveAmbiguity(strategies, default = TakeFirstColumn)
 
       val expectedColumns = Array("name1", "NaMe2", "name3", "name4")
       result.columns shouldBe expectedColumns
 
       val expectedRow = Row.fromSeq(Seq("col1_1", "col5_1", "col6_1", "col8_1"))
+      result.collect()(0) shouldBe expectedRow
+    }
+  }
+
+  "AmbiguousColumnsUtils" should "rename ambiguous columns" in {
+    withSparkSession { spark =>
+      val df = spark.createDataFrame(Seq(
+        ("col1_1", "col2_1", "col3_1", "col4_1", "col5_1")
+      )).toDF("name1", "Name1", "name2", "NaMe2", "name3")
+
+      val mapping = Map(
+        1 -> "name4",
+        3 -> "name5"
+      )
+      val result = AmbiguousColumnsUtils(df).renameAmbiguousColumns(mapping)
+
+      val expectedColumns = Array("name1", "name4", "name2", "name5", "name3")
+      result.columns shouldBe expectedColumns
+
+      val expectedRow = Row.fromSeq(Seq("col1_1", "col2_1", "col3_1", "col4_1", "col5_1"))
       result.collect()(0) shouldBe expectedRow
     }
   }
