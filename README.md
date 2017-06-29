@@ -5,20 +5,7 @@ Twinkle - is the collection of tools and utils that can make it easier to use Ap
 ## DataFrame Utils
 
 ### Resolve the column ambiguity
-In some cases it's possible to end up with DataFrame that contains multiple columns with the same name. For example this can happen as a result of `join` operation. Twinkle has a solution for this:
-```scala
-/** Resolves the column ambiguity using the provided strategies for
-  * each column name.
-  *
-  * @param strategies the map of strategies where the key is the column
-  *                   name and the value is a strategy implementation.
-  * @param default the fallback strategy in case when a column is not found
-  *                in strategies.
-  * @return a new DataFrame that contains no ambiguous columns.
-  */
-def resolveAmbiguity(strategies: Map[String, AmbiguityResolver] = Map.empty,
-                     default: AmbiguityResolver = TakeFirstColumn): DataFrame 
-```
+In some cases it's possible to end up with DataFrame that contains multiple columns with the same name. For example this can happen as a result of `join` operation. Twinkle has a [solution](https://github.com/izeigerman/twinkle/blob/master/twinkle/src/main/scala/twinkle/dataframe/AmbiguousColumnsUtils.scala) for this:
 ```scala
 val df1 = spark.createDataFrame(Seq(
   (0, "value1")
@@ -32,6 +19,11 @@ val joined = df1.join(df2, df1("id") === df2("id"), "inner")
 
 import twinkle._
 joined.resolveAmbiguity().show()
+
+// or
+
+joined.renameAmbiguousColumns(2 -> "id2").show()
+
 ```
 Result:
 ```
@@ -40,4 +32,12 @@ Result:
 +---+-------+-------+
 |  0| value1| value2|
 +---+-------+-------+
+
+or
+
++---+-------+---+-------+
+| id|column1|id2|column2|
++---+-------+---+-------+
+|  0| value1|  0| value2|
++---+-------+---+-------+
 ```
