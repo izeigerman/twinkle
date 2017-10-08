@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.apache.spark.sql.DataFrame
-import twinkle.dataframe.AmbiguousColumnsUtils
+import org.apache.spark.sql.{RelationalGroupedDataset, DataFrame}
+import twinkle.dataframe.{AggregationUtils, AmbiguousColumnsUtils}
 
 package object twinkle {
   implicit def toAmbiguousColumnsUtils(inputDf: DataFrame): AmbiguousColumnsUtils = {
     AmbiguousColumnsUtils(inputDf)
+  }
+
+  implicit def toAggregationUtils(ds: RelationalGroupedDataset): AggregationUtils = {
+    AggregationUtils(ds)
   }
 }

@@ -42,7 +42,7 @@ class AmbiguousColumnsUtilsSpec extends FlatSpec with Matchers with SparkSession
     }
   }
 
-  "AmbiguousColumnsUtils" should "rename ambiguous columns" in {
+  it should "rename ambiguous columns" in {
     withSparkSession { spark =>
       val df = spark.createDataFrame(Seq(
         ("col1_1", "col2_1", "col3_1", "col4_1", "col5_1")

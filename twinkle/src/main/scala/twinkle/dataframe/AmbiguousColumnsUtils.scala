@@ -44,7 +44,7 @@ object TakeLastColumn extends AmbiguityResolver {
   }
 }
 
-case class AmbiguousColumnsUtils(inputDf: DataFrame) {
+final case class AmbiguousColumnsUtils(inputDf: DataFrame) {
 
   /** Resolves the column ambiguity using the provided strategies for
     * each column name.
