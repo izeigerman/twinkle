@@ -46,10 +46,10 @@ class AggregateFunctionSpec extends FlatSpec with Matchers with SparkSessionMixi
       )).toDF("id", "str")
 
       val concat = ConcatAggregateFunction(separator = " ", maxUniqueValues = 2,
-        undefinedIdentifier = MapBasedCategoricalFunction.UndefinedIdentifier)
+        undefinedIdentifier = None)
       val result = df.groupBy("id").agg(concat(df("str")).as("str_concat"))
       val record = result.select("str_concat").collect()(0)
-      record.getString(0) shouldBe MapBasedCategoricalFunction.UndefinedIdentifier
+      record.getString(0) shouldBe null
     }
   }
 
@@ -82,11 +82,10 @@ class AggregateFunctionSpec extends FlatSpec with Matchers with SparkSessionMixi
         (0 until rows).map(idx => (0, s"string$idx"))
       ).toDF("id", "str").repartition(partitions)
 
-      val mostFrequent = MostFrequentValueFunction(
-        maxUniqueValues, MapBasedCategoricalFunction.UndefinedIdentifier)
+      val mostFrequent = MostFrequentValueFunction(maxUniqueValues, None)
       val result = df.groupBy("id").agg(mostFrequent(df("str")).as("str_first"))
       val record = result.select("str_first").collect()(0)
-      record.getString(0) shouldBe MapBasedCategoricalFunction.UndefinedIdentifier
+      record.getString(0) shouldBe null
     }
   }
 }

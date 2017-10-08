@@ -22,7 +22,7 @@ import scala.collection.Map
 
 abstract class MapBasedCategoricalFunction[T](valueType: DataType,
                                               maxUniqueValues: Int,
-                                              undefinedIdentifier: String)
+                                              undefinedIdentifier: Option[String])
   extends UserDefinedAggregateFunction {
 
   override def inputSchema: StructType = StructType(
@@ -73,7 +73,7 @@ abstract class MapBasedCategoricalFunction[T](valueType: DataType,
     if (!isUndefined) {
       doEvaluate(getMapBuffer(buffer))
     } else {
-      undefinedIdentifier
+      undefinedIdentifier.orNull
     }
   }
 

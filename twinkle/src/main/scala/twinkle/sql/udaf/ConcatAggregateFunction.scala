@@ -19,7 +19,7 @@ import org.apache.spark.sql.types._
 import scala.collection.Map
 
 final case class ConcatAggregateFunction(separator: String, maxUniqueValues: Int,
-                                         undefinedIdentifier: String)
+                                         undefinedIdentifier: Option[String])
   extends MapBasedCategoricalFunction[Null](NullType, maxUniqueValues, undefinedIdentifier) {
 
   protected def initializeBuffer: Map[String, Null] = Map.empty[String, Null]
@@ -44,6 +44,6 @@ object ConcatAggregateFunction {
     ConcatAggregateFunction(
       separator = " ",
       maxUniqueValues = MapBasedCategoricalFunction.DefaultMaxValues,
-      undefinedIdentifier = MapBasedCategoricalFunction.UndefinedIdentifier)
+      undefinedIdentifier = None)
   }
 }

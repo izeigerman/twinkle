@@ -20,7 +20,7 @@ import scala.collection.Map
 
 class FrequentItemAggregateFunction(position: Int,
                                     maxUniqueValues: Int,
-                                    undefinedIdentifier: String)
+                                    undefinedIdentifier: Option[String])
   extends MapBasedCategoricalFunction[Long](LongType, maxUniqueValues, undefinedIdentifier) {
 
   override protected def initializeBuffer: Map[String, Long] = Map.empty[String, Long]
@@ -44,22 +44,22 @@ class FrequentItemAggregateFunction(position: Int,
   }
 }
 
-final case class MostFrequentValueFunction(maxUniqueValues: Int, undefinedIdentifier: String)
+final case class MostFrequentValueFunction(maxUniqueValues: Int,
+                                           undefinedIdentifier: Option[String])
   extends FrequentItemAggregateFunction(0, maxUniqueValues, undefinedIdentifier)
 
 object MostFrequentValueFunction {
   def apply(): MostFrequentValueFunction = {
-    MostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues,
-      MapBasedCategoricalFunction.UndefinedIdentifier)
+    MostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues, None)
   }
 }
 
-final case class SecondMostFrequentValueFunction(maxUniqueValues: Int, undefinedIdentifier: String)
+final case class SecondMostFrequentValueFunction(maxUniqueValues: Int,
+                                                 undefinedIdentifier: Option[String])
   extends FrequentItemAggregateFunction(1, maxUniqueValues, undefinedIdentifier)
 
 object SecondMostFrequentValueFunction {
   def apply(): SecondMostFrequentValueFunction = {
-    SecondMostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues,
-      MapBasedCategoricalFunction.UndefinedIdentifier)
+    SecondMostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues, None)
   }
 }
