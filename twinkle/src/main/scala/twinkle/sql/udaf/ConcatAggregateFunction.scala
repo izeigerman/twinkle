@@ -18,6 +18,17 @@ package twinkle.sql.udaf
 import org.apache.spark.sql.types._
 import scala.collection.Map
 
+/** The aggregation function that concatenates all unique column values
+  * into a single value.
+  *
+  * @param separator a separator between values.
+  * @param maxUniqueValues if the number of unique values in a column exceeds
+  *                        this value, the result of this function is considered
+  *                        undefined.
+  * @param undefinedIdentifier the optional value that will be returned by this
+  *                            function in case when result is undefined. If not
+  *                            specified the null reference will be returned.
+  */
 final case class ConcatAggregateFunction(separator: String, maxUniqueValues: Int,
                                          undefinedIdentifier: Option[String])
   extends MapBasedCategoricalFunction[Null](NullType, maxUniqueValues, undefinedIdentifier) {

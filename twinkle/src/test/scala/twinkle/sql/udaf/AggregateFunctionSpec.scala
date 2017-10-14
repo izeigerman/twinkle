@@ -53,6 +53,22 @@ class AggregateFunctionSpec extends FlatSpec with Matchers with SparkSessionMixi
     }
   }
 
+  it should "handle null values correctly" in {
+    withSparkSession { spark =>
+      val df = spark.createDataFrame(Seq(
+        (0, "string1"),
+        (0, "string2"),
+        (0, null),
+        (0, "string1")
+      )).toDF("id", "str")
+
+      val concat = ConcatAggregateFunction()
+      val result = df.groupBy("id").agg(concat(df("str")).as("str_concat"))
+      val record = result.select("str_concat").collect()(0)
+      record.getString(0) shouldBe "null string1 string2"
+    }
+  }
+
   "FrequentItemAggregateFunction" should "return the first and the second most frequent item" in {
     withSparkSession { spark =>
       val df = spark.createDataFrame(Seq(

@@ -26,29 +26,53 @@ final case class AggregationUtils(groupedDataset: RelationalGroupedDataset) {
 
   private lazy val originalDf: DataFrame = getOriginalDataFrame
 
+  /** Applies both numeric and string aggregators.
+    *
+    * @return a dataframe with aggregated values.
+    */
   def aggregate: DataFrame = {
     val numericExpressions = applyAggregators(getNumericFields, NumericAggregators)
-    val categoricalExpressions = applyAggregators(getCategoricalFields, CategoricalAggregators)
+    val categoricalExpressions = applyAggregators(getStringFields, StringAggregators)
     applyExpressions(numericExpressions ++ categoricalExpressions)
   }
 
+  /** Applies numeric aggregators only.
+    *
+    * @return a dataframe with aggregated values.
+    */
   def aggregateNumeric: DataFrame = {
     aggregateNumeric(getNumericFields)
   }
 
+  /** Applies numeric aggregators on a specified
+    * list of columns.
+    *
+    * @param columns a list of numeric column names.
+    * @return a dataframe with aggregated values.
+    */
   def aggregateNumeric(columns: Seq[String]): DataFrame = {
     require(columns.nonEmpty, "Empty list of numeric columns")
     val expressions = applyAggregators(columns, NumericAggregators)
     applyExpressions(expressions)
   }
 
-  def aggregateCategorical: DataFrame = {
-    aggregateCategorical(getCategoricalFields)
+  /** Applies string aggregators only.
+    *
+    * @return a dataframe with aggregated values.
+    */
+  def aggregateString: DataFrame = {
+    aggregateString(getStringFields)
   }
 
-  def aggregateCategorical(columns: Seq[String]): DataFrame = {
+  /** Applies string aggregators on a specified
+    * list of columns.
+    *
+    * @param columns a list of string column names.
+    * @return a dataframe with aggregated values.
+    */
+  def aggregateString(columns: Seq[String]): DataFrame = {
     require(columns.nonEmpty, "Empty list of string columns")
-    val expressions = applyAggregators(columns, CategoricalAggregators)
+    val expressions = applyAggregators(columns, StringAggregators)
     applyExpressions(expressions)
   }
 
@@ -69,7 +93,7 @@ final case class AggregationUtils(groupedDataset: RelationalGroupedDataset) {
     originalDf.schema.filter(_.dataType.isInstanceOf[NumericType]).map(_.name)
   }
 
-  private def getCategoricalFields: Seq[String] = {
+  private def getStringFields: Seq[String] = {
     originalDf.schema.filter(_.dataType == StringType).map(_.name)
   }
 
@@ -91,7 +115,7 @@ object AggregationUtils {
     "max_sub_min" -> ((col: String) => max(col) - min(col))
   )
 
-  private val CategoricalAggregators: Seq[Aggregator] = Seq(
+  private val StringAggregators: Seq[Aggregator] = Seq(
     "distinct_count" -> ((col: String) => countDistinct(col)),
     "concat" -> concatAgg, "most_frequent" -> mostFrequentValue,
     "second_most_frequent" -> secondMostFrequentValue

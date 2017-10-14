@@ -45,7 +45,7 @@ abstract class MapBasedCategoricalFunction[T](valueType: DataType,
   override def update(buffer: MutableAggregationBuffer, input: Row): Unit = {
     val isUndefined = buffer.getBoolean(1)
     if (!isUndefined) {
-      val result = doUpdate(getMapBuffer(buffer), input.getString(0))
+      val result = doUpdate(getMapBuffer(buffer), Option(input.getString(0)).getOrElse("null"))
       if (result.size > maxUniqueValues) {
         buffer(1) = true
       } else {

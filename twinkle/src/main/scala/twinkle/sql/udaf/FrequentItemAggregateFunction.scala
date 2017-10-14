@@ -18,6 +18,20 @@ package twinkle.sql.udaf
 import org.apache.spark.sql.types._
 import scala.collection.Map
 
+/** The aggregation function that counts how many times different values
+  * occur in a column and builds a leaderboard based on results. This
+  * function can return only a single result, so the desired position
+  * in a leaderboard must be specified.
+  *
+  * @param position a value with a given position in a leaderboard will be returned.
+  *                 0 - means the most frequent item, 1 - the second most frequent item, etc.
+  * @param maxUniqueValues if the number of unique values in a column exceeds
+  *                        this value, the result of this function is considered
+  *                        undefined.
+  * @param undefinedIdentifier the optional value that will be returned by this
+  *                            function in case when result is undefined. If not
+  *                            specified the null reference will be returned.
+  */
 class FrequentItemAggregateFunction(position: Int,
                                     maxUniqueValues: Int,
                                     undefinedIdentifier: Option[String])

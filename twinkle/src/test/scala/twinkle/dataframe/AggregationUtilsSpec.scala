@@ -53,7 +53,7 @@ class AggregationUtilsSpec extends FlatSpec with Matchers with SparkSessionMixin
   it should "aggregate categorical columns" in {
     withSparkSession { spark =>
       val df = createTestDataFrame(spark)
-      val resultDf = new AggregationUtils(df.groupBy("id")).aggregateCategorical
+      val resultDf = new AggregationUtils(df.groupBy("id")).aggregateString
       validateCategorical(resultDf)
     }
   }
@@ -84,7 +84,7 @@ class AggregationUtilsSpec extends FlatSpec with Matchers with SparkSessionMixin
         (0, 1, 2)
       )).toDF("id", "num1", "num2")
       intercept[IllegalArgumentException] {
-        new AggregationUtils(df.groupBy("id")).aggregateCategorical
+        new AggregationUtils(df.groupBy("id")).aggregateString
       }
     }
   }
