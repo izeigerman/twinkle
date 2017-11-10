@@ -31,7 +31,7 @@ import scala.collection.Map
   */
 final case class ConcatAggregateFunction(separator: String, maxUniqueValues: Int,
                                          undefinedIdentifier: Option[String])
-  extends MapBasedCategoricalFunction[Null](NullType, maxUniqueValues, undefinedIdentifier) {
+  extends MapBasedStringFunction[Null](NullType, maxUniqueValues, undefinedIdentifier) {
 
   protected def initializeBuffer: Map[String, Null] = Map.empty[String, Null]
 
@@ -54,7 +54,7 @@ object ConcatAggregateFunction {
   def apply(): ConcatAggregateFunction = {
     ConcatAggregateFunction(
       separator = " ",
-      maxUniqueValues = MapBasedCategoricalFunction.DefaultMaxValues,
+      maxUniqueValues = MapBasedStringFunction.DefaultMaxValues,
       undefinedIdentifier = None)
   }
 }

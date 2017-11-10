@@ -97,7 +97,7 @@ final case class AggregationUtils(groupedDataset: RelationalGroupedDataset) {
     originalDf.schema.filter(_.dataType == StringType).map(_.name)
   }
 
-  private def getOriginalDataFrame: DataFrame = {
+  private def getOgriginalDataFrame: DataFrame = {
     val dfField = ru.typeOf[RelationalGroupedDataset]
       .members.filter(_.name.decodedName.toString == "df").head
     val im = ru.runtimeMirror(this.getClass.getClassLoader)

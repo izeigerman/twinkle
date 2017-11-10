@@ -35,7 +35,7 @@ import scala.collection.Map
 class FrequentItemAggregateFunction(position: Int,
                                     maxUniqueValues: Int,
                                     undefinedIdentifier: Option[String])
-  extends MapBasedCategoricalFunction[Long](LongType, maxUniqueValues, undefinedIdentifier) {
+  extends MapBasedStringFunction[Long](LongType, maxUniqueValues, undefinedIdentifier) {
 
   override protected def initializeBuffer: Map[String, Long] = Map.empty[String, Long]
 
@@ -64,7 +64,7 @@ final case class MostFrequentValueFunction(maxUniqueValues: Int,
 
 object MostFrequentValueFunction {
   def apply(): MostFrequentValueFunction = {
-    MostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues, None)
+    MostFrequentValueFunction(MapBasedStringFunction.DefaultMaxValues, None)
   }
 }
 
@@ -74,6 +74,6 @@ final case class SecondMostFrequentValueFunction(maxUniqueValues: Int,
 
 object SecondMostFrequentValueFunction {
   def apply(): SecondMostFrequentValueFunction = {
-    SecondMostFrequentValueFunction(MapBasedCategoricalFunction.DefaultMaxValues, None)
+    SecondMostFrequentValueFunction(MapBasedStringFunction.DefaultMaxValues, None)
   }
 }

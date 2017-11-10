@@ -20,9 +20,9 @@ import org.apache.spark.sql.expressions.{MutableAggregationBuffer, UserDefinedAg
 import org.apache.spark.sql.types._
 import scala.collection.Map
 
-abstract class MapBasedCategoricalFunction[T](valueType: DataType,
-                                              maxUniqueValues: Int,
-                                              undefinedIdentifier: Option[String])
+abstract class MapBasedStringFunction[T](valueType: DataType,
+                                         maxUniqueValues: Int,
+                                         undefinedIdentifier: Option[String])
   extends UserDefinedAggregateFunction {
 
   override def inputSchema: StructType = StructType(
@@ -94,7 +94,7 @@ abstract class MapBasedCategoricalFunction[T](valueType: DataType,
   }
 }
 
-object MapBasedCategoricalFunction {
+object MapBasedStringFunction {
   val DefaultMaxValues: Int = 100
   val UndefinedIdentifier: String = "undefined"
 }
